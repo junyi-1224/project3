@@ -23,7 +23,8 @@ This package is generated for the courese STAT 302 as project 3 in University of
 \n
 
 ```{r}
-devtools::install_github("https://github.com/junyi-1224/project3")
+library(devtools)
+# devtools::install_github("junyi-1224/project3", build_vignette = TRUE, build_opts = c())
 ```
 
 ```{r setup}
