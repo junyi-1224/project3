@@ -1,0 +1,85 @@
+---
+title: "Project 3: project3 Tutorial"
+author: "Junyi Huang"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Project 3: project3 Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+This package is generated for the courese STAT 302 as project 3 in University of Washington. The package includes three functions: `my_t_test`, `my_lm`, and `my_knn_cv`.  
+`my_t_test` performs a one sample t-test in R.
+`my_lm` fits a linear model in R.
+`my_knn_cv`  performs a k-Nearest Neighbors Cross-Validation in R.
+\n
+
+```{r}
+# devtools::install_github("https://github.com/JunyiHuang/project3")
+```
+
+```{r setup}
+library(project3)
+```
+
+## T test tutorial
+This is a tutorial for the function `my_t_test()`. We will show three examples. In each, we use a p-value cutoff of $\alpha = 0.05$. The first hypothesis test is $$H_0: \mu=20, $$ $$H_a: \mu\neq20 $$
+```{r}
+# my_t_test(my_penguins$species, "two.sided", 20)
+```
+
+Since our p value is greater than $\alpha$, we fail to reject the null hypothesis. That is, the data does not appear to suggest that the mean is not equal to 20
+
+The second hypothesis test is $$H_0: \mu=20, $$ $$H_a: \mu<20 $$
+```{r}
+# my_t_test(my_penguins$species, "less", 20)
+```
+
+Since our p value is less than $\alpha$, we reject the null hypothesis. That is, the data appears to suggest that the mean might be less than 20
+
+The third hypothesis test is $$H_0: \mu=20, $$ $$H_a: \mu>20 $$
+```{r}
+# my_t_test(my_penguins$species, "greater", 20)
+```
+## Tutorial for lm
+This is a tutorial for the function `my_lm()`. Our first example will use the `my_penguins` data set.
+```{r}
+# my_output <- my_lm(body_mass_g ~flipper_length_mm, my_penguins)
+# my_output
+```
+We can see based on the coefficient for `gdpPercap` that for every increase in `lifeExp` by one year, `gdpPercap` increases by about 4.452704e-04 when controlling for `continent`. We can write a hypothesis test associated with this coefficient, which I will refer to as $\beta_1$ where we will again use the p-value cutoff of $\alpha=0.05$: $$H_0: \beta_1=0, $$ $$H_a: \beta_1\neq0 $$ Since the p value is less than $\alpha$, we reject the null hypothesis. That is, the data appears to suggest that there might be some correlation between gdp per capita and life expectancy.
+
+We can also compare the exact values with the expected values from the model for Life Expectancy.
+```{r,}
+# beta <- my_output[,1]
+# X <- model.matrix(body_mass_g ~flipper_length_mm, my_penguins)
+# fitted <- X %*% beta
+# ggplot2::ggplot(mapping = ggplot2::aes(x = fitted, y = my_penguins$species,
+#                                        color = as.factor(my_penguins$species))) + 
+#   ggplot2::geom_point() + ggplot2::theme_bw() +
+#   ggplot2::labs(title = "Actual vs Fitted Values",
+#        x = "Fitted Values",
+#        y = "Actual Values")
+```
+
+When we control for continent, we see that the continents can be categorized clearly with this model. However, the fitted values seem to be over precise when determining the life expectancy as the actual values have a much wider range of values than the fitted values when controlling for country. It is also possible that there is a confounding variable such as time creating the correlation.
+
+## Tutorial for knn
+```{r}
+my_penguins <- my_penguins %>% na.omit
+for(i in(1:10)){
+  model <- my_knn_cv(my_penguins[3:6], my_penguins$species, i, 5)
+  print(model[2])
+  print(mean(model[[1]] != my_penguins$species))
+}
+```
+Based on the CV misclassification rates and training misclassification rates, I would choose 1 nearest neighbor. However, in practice, I might want to choose 2 or 3 nearest neighbors as while having 1 nearest neighbor would be more accurate, having slightly more nearest neighbors might increase generalizability. This is because having 2 or 3 nearest neighbors will create a better sense of the context of the specific part of the data by considering more data points in the prediction. I would still want a relatively small number of neighbors as having too many neighbors might result in a poor prediction as the context is not specific enough.
+
