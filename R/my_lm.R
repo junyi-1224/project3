@@ -41,7 +41,7 @@ my_lm <- function(formula, data) {
   pr <- 2 * pt(abs(t_val), df, lower.tail = FALSE)
   
   # create table
-  result_table <- as.table(cbind(coef, se, t_val, pr))
+  result_table <- data.frame(cbind(coef, se, t_val, pr))
   rownames(result_table) <- colnames(X)
   colnames(result_table) <- c("Estimate", "Std. Error", "t value", "P(>|t|)")
                                                     

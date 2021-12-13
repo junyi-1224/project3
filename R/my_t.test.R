@@ -15,11 +15,7 @@
 #' @export
 my_t_test <- function(x, alternative, mu) {
   
-  # send an error message if the alternative is error
-  if (!(alternative %in% c("two.sided", "less", "greater"))) {
-    stop("Error! Please choose from two.sided, less, or greater.")
-  }
-  
+
   # calculate the t-statistics
   test_stat <- ((mean(x) - mu) / (sd(x) / sqrt(length(x))))
   
@@ -34,6 +30,12 @@ my_t_test <- function(x, alternative, mu) {
   } else if ( alternative == "less") {
     p_val <- pt(abs(test_stat), df, lower.tail = TRUE)
   }
+  
+  # send an error message if the alternative is error
+  if (!(alternative %in% c("two.sided", "less", "greater"))) {
+    stop("Error! Please choose from two.sided, less, or greater.")
+  }
+  
 
   # t_list <- list(test_stat, df, alternative, p_val)
   result <- (list("test statistic" = test_stat,
@@ -42,3 +44,4 @@ my_t_test <- function(x, alternative, mu) {
               "p-value" = p_val))
   return(result)
 }
+

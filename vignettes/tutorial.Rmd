@@ -24,37 +24,49 @@ This package is generated for the courese STAT 302 as project 3 in University of
 
 ```{r}
 library(devtools)
+library(usethis)
+library(project3)
 # devtools::install_github("junyi-1224/project3", build_vignette = TRUE, build_opts = c())
 ```
 
-```{r setup}
-library(project3)
-```
 
 ## T test tutorial
-This is a tutorial for the function `my_t_test()`. We will show three examples. In each, we use a p-value cutoff of $\alpha = 0.05$. The first hypothesis test is $$H_0: \mu=20, $$ $$H_a: \mu\neq20 $$
 ```{r}
-# my_t_test(my_penguins$species, "two.sided", 20)
+library("dplyr")
+data("my_penguins")
+penguins <- my_penguins %>% 
+  na.omit() 
+mean(penguins$body_mass_g)
+```
+The original mean is 4207.057.
+
+This is a tutorial for the function `my_t_test()`. We will show three examples. In each, we use a p-value cutoff of $\alpha = 0.05$. The first hypothesis test is $$H_0: \mu=4000, $$ $$H_a: \mu\neq4000 $$
+```{r}
+my_t_test(penguins$body_mass_g, "two.sided", 4000)
+```
+Since our signifincance level $\alpha = 0.05, we would fail to reject the null hypothesis.As such, we cannot conclude that the mean body_mass_g from our data set is 4000.
+ 
+
+The second hypothesis test is $$H_0: \mu=4000, $$ $$H_a: \mu<4000 $$
+```{r}
+my_t_test(penguins$body_mass_g, "less", 4000)
 ```
 
-Since our p value is greater than $\alpha$, we fail to reject the null hypothesis. That is, the data does not appear to suggest that the mean is not equal to 20
+Since our p value is greater than $\alpha$, we fail reject the null hypothesis. That is, the data appears to suggest that the mean  is  less than 4000.
 
-The second hypothesis test is $$H_0: \mu=20, $$ $$H_a: \mu<20 $$
+
+The third hypothesis test is $$H_0: \mu=4000, $$ $$H_a: \mu>4000 $$
 ```{r}
-# my_t_test(my_penguins$species, "less", 20)
+my_t_test(penguins$body_mass_g, "greater", 4000)
 ```
+since our p value is less than $\alpha$, we reject the null hypothesis. That is, the data appears to suggest that the mean  is not greater than 4000
 
-Since our p value is less than $\alpha$, we reject the null hypothesis. That is, the data appears to suggest that the mean might be less than 20
 
-The third hypothesis test is $$H_0: \mu=20, $$ $$H_a: \mu>20 $$
-```{r}
-# my_t_test(my_penguins$species, "greater", 20)
-```
 ## Tutorial for lm
 This is a tutorial for the function `my_lm()`. Our first example will use the `my_penguins` data set.
 ```{r}
-# my_output <- my_lm(body_mass_g ~ flipper_length_mm, my_penguins)
-# my_output
+my_output <- my_lm(body_mass_g ~ flipper_length_mm, penguins)
+my_output
 ```
 We can see based on the coefficient for `gdpPercap` that for every increase in `lifeExp` by one year, `gdpPercap` increases by about 4.452704e-04 when controlling for `continent`. We can write a hypothesis test associated with this coefficient, which I will refer to as $\beta_1$ where we will again use the p-value cutoff of $\alpha=0.05$: $$H_0: \beta_1=0, $$ $$H_a: \beta_1\neq0 $$ Since the p value is less than $\alpha$, we reject the null hypothesis. That is, the data appears to suggest that there might be some correlation between gdp per capita and life expectancy.
 
