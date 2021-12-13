@@ -23,7 +23,7 @@ This package is generated for the courese STAT 302 as project 3 in University of
 \n
 
 ```{r}
-# devtools::install_github("https://github.com/JunyiHuang/project3")
+devtools::install_github("https://github.com/junyi-1224/project3")
 ```
 
 ```{r setup}
@@ -52,7 +52,7 @@ The third hypothesis test is $$H_0: \mu=20, $$ $$H_a: \mu>20 $$
 ## Tutorial for lm
 This is a tutorial for the function `my_lm()`. Our first example will use the `my_penguins` data set.
 ```{r}
-# my_output <- my_lm(body_mass_g ~flipper_length_mm, my_penguins)
+# my_output <- my_lm(body_mass_g ~ flipper_length_mm, my_penguins)
 # my_output
 ```
 We can see based on the coefficient for `gdpPercap` that for every increase in `lifeExp` by one year, `gdpPercap` increases by about 4.452704e-04 when controlling for `continent`. We can write a hypothesis test associated with this coefficient, which I will refer to as $\beta_1$ where we will again use the p-value cutoff of $\alpha=0.05$: $$H_0: \beta_1=0, $$ $$H_a: \beta_1\neq0 $$ Since the p value is less than $\alpha$, we reject the null hypothesis. That is, the data appears to suggest that there might be some correlation between gdp per capita and life expectancy.
